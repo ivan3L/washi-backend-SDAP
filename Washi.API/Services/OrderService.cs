@@ -6,6 +6,7 @@ using Washi.API.Domain.Models;
 using Washi.API.Domain.Repositories;
 using Washi.API.Domain.Services;
 using Washi.API.Domain.Services.Communications;
+using Washi.API.Patterns.OrderValidationChain;
 
 namespace Washi.API.Services
 {
@@ -15,13 +16,17 @@ namespace Washi.API.Services
         public readonly IUnitOfWork _unitOfWork;
         private readonly IOrderDetailRepository _orderDetailRepository;
         private readonly ILaundryServiceMaterialRepository _laundryServiceMaterialRepository;
+        private readonly IUserProfileRepository _userProfileRepository;
+        private readonly IUserPaymentMethodRepository _userPaymentMethodRepository;
 
-        public OrderService(IOrderRepository orderRepository, IOrderDetailRepository orderDetailRepository, ILaundryServiceMaterialRepository laundryServiceMaterialRepository,IUnitOfWork unitOfWork)
+        public OrderService(IUserPaymentMethodRepository userPaymentMethodRepository, IUserProfileRepository userProfileRepository, IOrderRepository orderRepository, IOrderDetailRepository orderDetailRepository, ILaundryServiceMaterialRepository laundryServiceMaterialRepository,IUnitOfWork unitOfWork)
         {
             _orderRepository = orderRepository;
             _unitOfWork = unitOfWork;
             _laundryServiceMaterialRepository = laundryServiceMaterialRepository;
             _orderDetailRepository = orderDetailRepository;
+            _userProfileRepository = userProfileRepository;
+            _userPaymentMethodRepository = userPaymentMethodRepository;
         }
         public async Task<OrderResponse> DeleteAsync(int id)
         {
@@ -66,11 +71,21 @@ namespace Washi.API.Services
 
         public async Task<OrderResponse> SaveAsync(Order order)
         {
+            var orderValidation = new OrderValidation();
+            var userProfile = _userProfileRepository.FindByIdNotAsync(order.UserId);
+            List<UserPaymentMethod> userPaymentMethods = new List<UserPaymentMethod>();
+            userPaymentMethods = _userPaymentMethodRepository.ListByUserId(order.UserId);
+            
+            var validation = orderValidation.ValidateOrder(order, userProfile, userPaymentMethods);
             try
             {
-                await _orderRepository.AddAsync(order);
-                await _unitOfWork.CompleteAsync();
-                return new OrderResponse(order);
+                if (orderValidation.ValidateOrder(order, userProfile, userPaymentMethods) == "")
+                {
+                    await _orderRepository.AddAsync(order);
+                    await _unitOfWork.CompleteAsync();
+                    return new OrderResponse(order);
+                }
+                else return new OrderResponse($"An error ocurred while saving the order for the following reasons: {orderValidation.ValidateOrder(order, userProfile, userPaymentMethods)}");
             }
             catch (Exception ex)
             {

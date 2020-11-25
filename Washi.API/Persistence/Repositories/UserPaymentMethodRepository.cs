@@ -74,5 +74,14 @@ namespace Washi.API.Persistence.Repositories
                 Remove(userPaymentMethod);
             }
         }
+
+        public List<UserPaymentMethod> ListByUserId (int id)
+        {
+            return _context.UserPaymentMethods
+                .Where(p => p.UserId == id)
+                .Include(p => p.PaymentMethod)
+                .Include(p => p.User)
+                .ToList();
+        }
     }
 }

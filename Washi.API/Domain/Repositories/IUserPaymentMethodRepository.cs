@@ -16,5 +16,6 @@ namespace Washi.API.Domain.Repositories
         void Remove(UserPaymentMethod userPaymentMethod);
         Task AssignUserPaymentMethod(int userId, int paymentMethodId);
         void UnassignUserPaymentMethod(int userId, int paymentMethodId);
+        List<UserPaymentMethod> ListByUserId(int id);
     }
 }

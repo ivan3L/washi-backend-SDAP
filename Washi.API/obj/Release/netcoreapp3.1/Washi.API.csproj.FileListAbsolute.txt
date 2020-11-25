@@ -133,3 +133,6 @@ C:\Users\ivanl\Documents\GitHub\washi-backend-SDAP\Washi.API\obj\Release\netcore
 C:\Users\ivanl\Documents\GitHub\washi-backend-SDAP\Washi.API\obj\Release\netcoreapp3.1\staticwebassets\Washi.API.StaticWebAssets.Manifest.cache
 C:\Users\ivanl\Documents\GitHub\washi-backend-SDAP\Washi.API\obj\Release\netcoreapp3.1\staticwebassets\Washi.API.StaticWebAssets.xml
 C:\Users\ivanl\Documents\GitHub\washi-backend-SDAP\Washi.API\obj\Release\netcoreapp3.1\Washi.API.genruntimeconfig.cache
+C:\Users\ivanl\Documents\GitHub\washi-backend-SDAP\Washi.API\obj\Release\netcoreapp3.1\Washi.API.csproj.CoreCompileInputs.cache
+C:\Users\ivanl\Documents\GitHub\washi-backend-SDAP\Washi.API\obj\Release\netcoreapp3.1\Washi.API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\ivanl\Documents\GitHub\washi-backend-SDAP\Washi.API\obj\Release\netcoreapp3.1\Washi.API.MvcApplicationPartsAssemblyInfo.cache

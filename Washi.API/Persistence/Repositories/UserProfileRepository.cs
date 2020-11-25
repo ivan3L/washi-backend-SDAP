@@ -38,6 +38,11 @@ namespace Washi.API.Persistence.Repositories
             return await _context.UserProfiles.FindAsync(id);
         }
 
+        public UserProfile FindByIdNotAsync(int id)
+        {
+            return _context.UserProfiles.Find(id);
+        }
+
         public void Update(UserProfile UserProfile)
         {
             _context.UserProfiles.Update(UserProfile);

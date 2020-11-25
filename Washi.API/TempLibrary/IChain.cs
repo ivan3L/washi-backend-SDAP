@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 
 namespace Washi.API.TempLibrary
 {
-    interface IChain
+    public interface IChain<T>
     {
+        void SetNext(IChain<T> nextInChain);
+        string process(T request);
     }
 }
