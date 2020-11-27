@@ -16,7 +16,7 @@ namespace Washi.API.Patterns.OrderValidationChain
         {
             if ((int)(order.DeliveryAddress[order.DeliveryAddress.Length - 1]) >= 48
                 && (int)(order.DeliveryAddress[order.DeliveryAddress.Length - 1]) <= 57) return null;
-            else return " ~Address is invalid~";
+            else return " ~Address must include house number~";
         }
 
         public void SetNext(IChain<Order> nextInChain)

@@ -6,7 +6,9 @@ using Washi.API.Domain.Models;
 using Washi.API.Domain.Repositories;
 using Washi.API.Domain.Services;
 using Washi.API.Domain.Services.Communications;
+using Washi.API.Patterns.ClientRepositoriesFacade;
 using Washi.API.Patterns.OrderValidationChain;
+using Washi.API.TempLibrary;
 
 namespace Washi.API.Services
 {
@@ -71,21 +73,24 @@ namespace Washi.API.Services
 
         public async Task<OrderResponse> SaveAsync(Order order)
         {
+            //--------------------
+            Facade<IUserProfileRepository, IUserPaymentMethodRepository> clientRepositoriesFacade = new Facade<IUserProfileRepository, IUserPaymentMethodRepository>(_userProfileRepository, _userPaymentMethodRepository);
+            //--------------------
             var orderValidation = new OrderValidation();
-            var userProfile = _userProfileRepository.FindByIdNotAsync(order.UserId);
-            List<UserPaymentMethod> userPaymentMethods = new List<UserPaymentMethod>();
-            userPaymentMethods = _userPaymentMethodRepository.ListByUserId(order.UserId);
+            //var userProfile = _userProfileRepository.FindByIdNotAsync(order.UserId);
+            //List<UserPaymentMethod> userPaymentMethods = new List<UserPaymentMethod>();
+            //userPaymentMethods = _userPaymentMethodRepository.ListByUserId(order.UserId);
             
-            var validation = orderValidation.ValidateOrder(order, userProfile, userPaymentMethods);
+            var validation = orderValidation.ValidateOrder(order, clientRepositoriesFacade);
             try
             {
-                if (orderValidation.ValidateOrder(order, userProfile, userPaymentMethods) == "")
+                if (orderValidation.ValidateOrder(order, clientRepositoriesFacade) == "")
                 {
                     await _orderRepository.AddAsync(order);
                     await _unitOfWork.CompleteAsync();
                     return new OrderResponse(order);
                 }
-                else return new OrderResponse($"An error ocurred while saving the order for the following reasons: {orderValidation.ValidateOrder(order, userProfile, userPaymentMethods)}");
+                else return new OrderResponse($"An error ocurred while saving the order for the following reasons: {orderValidation.ValidateOrder(order, clientRepositoriesFacade)}");
             }
             catch (Exception ex)
             {

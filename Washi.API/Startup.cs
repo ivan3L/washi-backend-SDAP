@@ -17,6 +17,7 @@ using Washi.API.Domain.Persistence.Contexts;
 using Washi.API.Domain.Repositories;
 using Washi.API.Domain.Services;
 using Washi.API.Extensions;
+using Washi.API.Patterns.ClientRepositoriesFacade;
 using Washi.API.Patterns.OrderValidationChain;
 using Washi.API.Persistence.Repositories;
 using Washi.API.Repositories;
@@ -66,6 +67,9 @@ namespace Washi.API
             services.AddScoped<IServiceMaterialRepository, ServiceMaterialRepository>();
             services.AddScoped<ILaundryServiceMaterialRepository, LaundryServiceMaterialRepository>();
             services.AddScoped<IPromotionRepository, PromotionRepository>();
+            //-------FacadeRepo------
+            services.AddScoped<ClientRepositoriesFacade>();
+
             //Scoped Services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPaymentMethodService, PaymentMethodService>();
